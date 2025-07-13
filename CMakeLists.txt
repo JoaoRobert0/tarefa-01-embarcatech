@@ -47,7 +47,13 @@ add_executable(tarefa-01 tarefa-01.c)
 target_include_directories(tarefa-01 PRIVATE ${CMAKE_CURRENT_LIST_DIR})
  
 # pull in common dependencies
-target_link_libraries(tarefa-01 pico_stdlib FreeRTOS-Kernel FreeRTOS-Kernel-Heap4)
+target_link_libraries(
+    tarefa-01 
+    pico_stdlib 
+    FreeRTOS-Kernel 
+    FreeRTOS-Kernel-Heap4 
+    hardware_adc    
+)
 
 pico_enable_stdio_uart(tarefa-01 0)
 pico_enable_stdio_usb(tarefa-01 1)
