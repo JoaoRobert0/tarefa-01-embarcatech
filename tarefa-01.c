@@ -16,7 +16,6 @@ void vTaskControleLED(void *pvParameters)
         vTaskDelay(50);
         gpio_put(led_pin_blue, 0);
         vTaskDelay(950);
-        printf("Blinking\n");
     }
 }
 
@@ -31,7 +30,7 @@ void vTaskTemperaturaInterna(void *pvParameters)
             
             float voltage = raw_value * 3.3f / (1 << 12);
             float temp_celsius = 27.0f - (voltage - 0.706f) / 0.001721f;
-            printf("Temperatura Interna: %.2f °C (Raw: %d)\n", temp_celsius, raw_value);
+            printf("Temperatura Interna: %.2f °C\n", temp_celsius);
         }
         vTaskDelay(2000);
     }
@@ -46,11 +45,31 @@ void vTaskJoystick(void *pvParameters)
             uint adc_y_raw = adc_read();
             adc_select_input(1);
             uint adc_x_raw = adc_read();
-            xSemaphoreGive(xADCMutex);
+
+
+            if (adc_y_raw > 2500) 
+            {
+                printf("Cima\n");
+            } 
+            else if (1500 > adc_y_raw) 
+            {
+                printf("Baixo\n");
+            }
+            else if (1500 > adc_x_raw)
+            {
+                printf("Esquerda\n");
+            }
+            else if (adc_x_raw > 2600)
+            {
+                printf("Direita\n");
+            }
+            else {
+                printf("Centro\n");
+            }
             
-            printf("X: %d | Y: %d\n", adc_x_raw, adc_y_raw);
+            xSemaphoreGive(xADCMutex);
         }
-        vTaskDelay(1500);
+        vTaskDelay(500);
     }
 }
 
@@ -82,7 +101,7 @@ int main()
 
     xTaskCreate(vTaskControleLED, "Task LED", 256, NULL, 1, NULL);
     xTaskCreate(vTaskTemperaturaInterna, "Task Temp", 256, NULL, 1, NULL);
-    xTaskCreate(vTaskJoystick, "Task Joy", 256, NULL, 1, NULL);
+    xTaskCreate(vTaskJoystick, "Task Joy", 1024, NULL, 1, NULL);
 
     vTaskStartScheduler();
 
