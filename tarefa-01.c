@@ -6,7 +6,7 @@
 #include "semphr.h"
 
 const uint led_pin_blue = 12;
-SemaphoreHandle_t xADCMutex;  // Mutex para controle de acesso ao ADC
+SemaphoreHandle_t xADCMutex;
 
 void vTaskControleLED(void *pvParameters) 
 {
@@ -16,6 +16,7 @@ void vTaskControleLED(void *pvParameters)
         vTaskDelay(50);
         gpio_put(led_pin_blue, 0);
         vTaskDelay(950);
+        printf("Blink\n");
     }
 }
 
@@ -62,9 +63,6 @@ void vTaskJoystick(void *pvParameters)
             else if (adc_x_raw > 2600)
             {
                 printf("Direita\n");
-            }
-            else {
-                printf("Centro\n");
             }
             
             xSemaphoreGive(xADCMutex);
