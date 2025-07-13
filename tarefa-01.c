@@ -6,7 +6,7 @@
 
 #include <stdio.h>
 
-const uint led_pin_red = 12;
+const uint led_pin_blue = 12;
 
 void vBlinkTask()
 {
@@ -14,26 +14,29 @@ void vBlinkTask()
     for (;;)
     {
 
-        gpio_put(led_pin_red, 1);
+        gpio_put(led_pin_blue, 1);
 
-        vTaskDelay(250);
+        vTaskDelay(50);
 
-        gpio_put(led_pin_red, 0);
+        gpio_put(led_pin_blue, 0);
 
-        vTaskDelay(250);
+        vTaskDelay(950);
 
         printf("Blinking\n");
     }
 }
 
-void main()
-{
-
+void setup() {
     stdio_init_all();
 
-    gpio_init(led_pin_red);
+    gpio_init(led_pin_blue);
 
-    gpio_set_dir(led_pin_red, GPIO_OUT);
+    gpio_set_dir(led_pin_blue, GPIO_OUT);
+}
+
+void main()
+{
+    setup();
 
     xTaskCreate(vBlinkTask, "Blink Task", 128, NULL, 1, NULL);
 
